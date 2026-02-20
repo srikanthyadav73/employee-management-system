@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="welcome-banner">
+    <h2>Good Morning {{ username }}</h2>
+    <p>Welcome back to Employee Management System</p>
+</div>
+
+<!-- SUMMARY CARDS -->
+<div class="cards">
+
+    <div class="card">
+        <h3>Total Employees</h3>
+        <h2>{{ total_employees }}</h2>
+    </div>
+
+    {% if role == "admin" %}
+    <div class="card">
+        <h3>Total Users</h3>
+        <h2>{{ total_users }}</h2>
+    </div>
+    {% endif %}
+
+    <div class="card">
+        <h3>Total Departments</h3>
+        <h2>{{ total_departments }}</h2>
+    </div>
+
+    <div class="card">
+        <h3>Your Role</h3>
+        <h2 style="text-transform: capitalize;">{{ role }}</h2>
+    </div>
+
+</div>
+
+
+<!-- CHARTS SECTION -->
+<div style="display:flex; gap:50px; margin-top:40px; justify-content:center; align-items:center; flex-wrap:wrap;">
+
+    <!-- Doughnut Chart -->
+    <div style="width:320px; height:320px;">
+        <h3 style="text-align:center;">Employees Distribution</h3>
+        <canvas id="pieChart"></canvas>
+    </div>
+
+    <!-- Bar Chart -->
+    <div style="width:420px; height:320px;">
+        <h3 style="text-align:center;">Employees per Department</h3>
+        <canvas id="barChart"></canvas>
+    </div>
+
+</div>
+
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Charts Script -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const labels = {{ dept_labels | tojson }};
+    const values = {{ dept_values | tojson }};
+
+    // 🔵 Doughnut Chart
+    new Chart(document.getElementById('pieChart'), {
+        type: 'doughnut',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: values,
+                backgroundColor: [
+                    '#4f46e5',
+                    '#22c55e',
+                    '#f59e0b',
+                    '#ef4444',
+                    '#06b6d4',
+                    '#8b5cf6'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '60%',
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+
+    // 🔵 Bar Chart
+    new Chart(document.getElementById('barChart'), {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Employees',
+                data: values,
+                backgroundColor: '#4f46e5'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+
+});
+</script>
+
+{% endblock %}
