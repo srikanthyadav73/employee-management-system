@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="otp-container">
+    <div class="otp-card">
+        <h2>Email Verification</h2>
+        <p>Enter the 6-digit OTP sent to your email</p>
+
+        <form method="POST">
+            <div class="otp-inputs">
+                <input type="text" maxlength="1" class="otp-box" required>
+                <input type="text" maxlength="1" class="otp-box" required>
+                <input type="text" maxlength="1" class="otp-box" required>
+                <input type="text" maxlength="1" class="otp-box" required>
+                <input type="text" maxlength="1" class="otp-box" required>
+                <input type="text" maxlength="1" class="otp-box" required>
+            </div>
+
+            <input type="hidden" name="otp" id="final-otp">
+
+            <button type="submit" class="verify-btn">Verify OTP</button>
+        </form>
+
+        <div class="timer">
+            Resend OTP in <span id="countdown">60</span>s
+        </div>
+    </div>
+</div>
+
+<script>
+const inputs = document.querySelectorAll(".otp-box");
+const finalOtp = document.getElementById("final-otp");
+
+inputs.forEach((input, index) => {
+    input.addEventListener("input", () => {
+        if (input.value.length === 1 && index < inputs.length - 1) {
+            inputs[index + 1].focus();
+        }
+        finalOtp.value = Array.from(inputs).map(i => i.value).join("");
+    });
+});
+
+let time = 60;
+const countdown = document.getElementById("countdown");
+
+const timer = setInterval(() => {
+    time--;
+    countdown.textContent = time;
+    if (time <= 0) {
+        clearInterval(timer);
+        countdown.textContent = "0";
+    }
+}, 1000);
+</script>
+
+{% endblock %}
