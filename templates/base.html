@@ -17,20 +17,25 @@ canvas {
     <div class="sidebar">
         <h2 class="logo">EMS</h2>
 
-    <ul class="menu">
-        <li>
-    <a href="{{ url_for('employee.my_profile') }}">My Profile</a>
-</li>
+       <ul class="menu">
 
-    <li class="{% if request.endpoint == 'dashboard' %}active{% endif %}">
+    <!-- Always Visible -->
+    <li>
+        <a href="{{ url_for('employee.my_profile') }}">My Profile</a>
+    </li>
+
+    <li>
         <a href="{{ url_for('dashboard') }}">Dashboard</a>
     </li>
 
-    <li class="{% if 'employee' in request.endpoint %}active{% endif %}">
+    <!-- Admin Only Sections -->
+    {% if current_user.role == "admin" %}
+    
+    <li>
         <a href="{{ url_for('employee.list_employees') }}">Employees</a>
     </li>
 
-    <li class="{% if 'department' in request.endpoint %}active{% endif %}">
+    <li>
         <a href="{{ url_for('department.list_departments') }}">Departments</a>
     </li>
 
@@ -41,7 +46,11 @@ canvas {
     <li>
         <a href="#">Settings</a>
     </li>
+
+    {% endif %}
+
 </ul>
+
 
 
 
